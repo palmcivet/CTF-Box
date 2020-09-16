@@ -1,20 +1,6 @@
-#!/bin/bash
+# !/bin/bash
 RMCMD=/bin/rm
 MVCMD=/bin/mv
-
-function install ()
-{
-    self=$(cd `dirname $0`; pwd)/saferm
-    dest=/usr/local/bin/saferm
-    cp -rf ${self} ${dest}
-
-    if [ ! -x ${dest} ]; then
-        sudo chmod +x ${dest}
-    fi
-    echo "alias rm=\"sh $dest\"" >> ~/.zshrc
-    source ~/.zshrc
-    echo "install success!";
-}
 
 if [ ! -d ~/.Trash ]; then
     mkdir ~/.Trash
@@ -34,9 +20,6 @@ do
         force="yes"
     elif [ "$arg" = "-clean" ]; then
         clean="yes"
-    elif [ "$arg" = "-install" ]; then
-        install
-        exit
     else
         ctrlargs="$ctrlargs $arg"
     fi

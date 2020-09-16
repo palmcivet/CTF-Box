@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  light_sec:
+    build: ./
+    image: light_sec
+    container_name: ctf_env
+    volumes:
+      - ./install:/root/scripts:ro
+      - .:/root/work
+    stdin_open: true
+    tty: true

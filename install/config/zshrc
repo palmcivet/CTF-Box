@@ -30,5 +30,3 @@ alias py2=python
 alias py3=python3
 
 source $ZSH/oh-my-zsh.sh
-
-echo -e "Hack fun!"

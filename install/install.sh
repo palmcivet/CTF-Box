@@ -1,8 +1,11 @@
 # !/usr/bin/env bash
 
-ENV="SEC"
+GIT="tools"
+WORK="work"
+DEBUG="debugger"
+SCRIPT="scripts"
 
-mkdir ~/${ENV}
+mkdir ~/${GIT} ~/${WORK} ~/${DEBUG} ~/${SCRIPT}
 
 # support i386
 dpkg --add-architecture i386
@@ -36,16 +39,14 @@ touch ~/.z
 ln -fs /usr/share/zoneinfo/Asiz/Shanghai /etc/localtime
 
 # CTF tools
-if [ $1 = true ]; then
-    apt-get install -y --no-install-recommends \
-        binwalk \
-        pcapfix \
-        foremost \
-        steghide \
-        pngcheck \
-        outguess \
-        multimon-ng
-fi
+# apt-get install -y --no-install-recommends \
+#     binwalk \
+#     pcapfix \
+#     foremost \
+#     steghide \
+#     pngcheck \
+#     outguess \
+#     multimon-ng
 
 # binary
 apt-get install -y --no-install-recommends \
@@ -53,18 +54,23 @@ apt-get install -y --no-install-recommends \
     gcc \
     gdb
 
-python3 -m pip install --upgrade pip
-python3 -m pip install --upgrade git+https://github.com/Gallopsled/pwntools.git@dev
+# python3 -m pip install --upgrade git+https://github.com/Gallopsled/pwntools.git@dev
 python3 -m pip install virtualenvwrapper
 
 # IDA Pro debugger
-cp -rf ./debug ~/debug
+cp -rf ./debug ~/${DEBUG}
 
 # tools from GitHub
-cd ~/${ENV}
-git clone https://github.com/zachriggle/peda
-echo "source ~/${ENV}/peda/peda.py" >> ~/.gdbinit
+# cd ~/${GIT}
+# git clone https://github.com/zachriggle/peda
+# echo "source ~/${GIT}/peda/peda.py" >> ~/.gdbinit
 
 # clean cache
 apt-get autoclean \
-    && apt-get autoremove
+    && apt-get autoremove \
+    && sync
+echo "" > /var/log/messages
+echo "" > /var/log/syslog
+find /var/log/ -name "*.log" | xargs rm -f
+rm -r /var/log/apt
+rm -r ~/.cache
