@@ -1,4 +1,5 @@
 # !/bin/bash
+
 RMCMD=/bin/rm
 MVCMD=/bin/mv
 
@@ -14,11 +15,9 @@ clean="no"
 until [ $# -eq 0 ]
 do
     arg=$1
-    if [ "${arg:0:1}"x != "-"x ]; then
-        args="$args $arg"
-    elif [ "$arg" = "-force" ]; then
+    if [ "$arg" = "-f" ]; then
         force="yes"
-    elif [ "$arg" = "-clean" ]; then
+    elif [ "$arg" = "-c" ]; then
         clean="yes"
     else
         ctrlargs="$ctrlargs $arg"
@@ -27,13 +26,11 @@ do
 done
 
 if [ $clean = "yes" ]; then
-        echo -n -e "\033[41;37m This operation may cause the file to be lost!! Are you sure clean the trash?\033[0m yes/no :"
+    echo -n "\033[41;37mThis operation may cause the file to be lost!! Are you sure clean the trash?(y/n)\033[0m:"
     read ipt
-    while [[ ! $ipt = "yes" ]] && [[ ! $ipt = "no" ]]; do
-        echo -n -e "\033[41;37mType Error, Retype please !\033[0m yes/no :"
-        read ipt
-    done
-    if [ $ipt = "yes" ]; then
+    if [ ! $ipt = "y" ] && [ ! $ipt = "" ]; then
+        echo "Type Error, operation canceled!"
+    else
         /bin/rm -rf ~/.Trash/*
         echo "The trash cleaned!"
     fi
@@ -41,13 +38,6 @@ if [ $clean = "yes" ]; then
 fi
 
 if [ $force = "yes" ]; then
-$RMCMD $ctrlargs $args
-exit 0
-fi
-
-
-if [ `uname` = "Darwin" ]; then
-    $MVCMD -v -f $args ~/.Trash
-else
-    $MVCMD -v -f --backup=numbered $args ~/.Trash
+    $RMCMD $ctrlargs $args
+    exit 0
 fi

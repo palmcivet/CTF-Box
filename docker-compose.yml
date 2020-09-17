@@ -1,12 +1,13 @@
 version: "3"
 
 services:
-  light_sec:
+  sec_app:
     build: ./
     image: light_sec
-    container_name: ctf_env
+    container_name: sec_env
+    env_file: .env
     volumes:
-      - ./install:/root/scripts:ro
-      - .:/root/work
+      - ${OUTER_FILE}:/root/file:ro
+      - ${OUTER_WORK}:/root/work
     stdin_open: true
     tty: true
