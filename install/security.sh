@@ -4,9 +4,7 @@ SEC=SEC
 
 WORK=~/work
 TOOL=~/${SEC}/tools
-ADDON=~/${SEC}/addon
 DEBUG=~/${SEC}/debug
-WORKON_HOME=~/${SEC}/ENV
 
 apt-get install -y --no-install-recommends \
     binwalk \
@@ -25,7 +23,7 @@ apt-get install -y --no-install-recommends \
     m4 libgmp-dev libmpfr-dev libmpc-dev
 
 # debugger
-mkdir -p ${WORK} ${TOOL} ${ADDON} ${DEBUG} ${WORKON_HOME}
+mkdir -p ${WORK} ${TOOL} ${DEBUG}
 cp -rf ./debug/ ${DEBUG}
 
 # tools from GitHub

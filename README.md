@@ -7,17 +7,35 @@ This is a Docker for CTF based on ubuntu:20.04
 ```bash
 $ git clone --depth=1 https://github.com/Palmcivet/light-security
 $ cd ./light-security
+$ vi .env
 $ docker-compose up -d
 $ docker exec -it sec_app /bin/zsh
 ```
 
-You can launch a instant system use this:
+You should edit `.env` so that you can use your file in the container. By default, the compose will pass `./` to those variables:
+
+- `OUTER_FILE`: files that use as tool
+- `OUTER_WORK`: your work directory
+
+You can launch a instant docker with command:
 
 ```bash
 $ docker run -it --rm --name temp_app -v /other_dir:/other:rw light_sec /bin/zsh
 ```
 
-Use  `--rm` so it will be cleaned after exit.
+Use `--rm` so it will be cleaned after exit.
+
+> NOTICE: the arguments specified by `-v` should be absolute path.
+
+## Environment
+
+By default, you will enter `~`, with following directory:
+
+- SEC
+    - debug: debuggers that support remote debugging
+    - toos: executable files
+- files
+- work
 
 ## Alias
 
@@ -63,6 +81,12 @@ alias sec_start="docker-compose -f $SEC_FILE start sec_app && sec_enter"
 - outguess
 - multimon-ng
 - ncat
+- ltrace
 - gcc
 - gdb
-- virtualenvwrapper
+- gdb-multiarch
+- peda
+- radare2
+- pwntools
+- z3-solver
+- gmpy
