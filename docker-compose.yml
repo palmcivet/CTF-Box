@@ -1,13 +1,15 @@
 version: "3"
 
 services:
-  sec_app:
+  ctf_app:
     build: ./
-    image: light_sec
-    container_name: sec_env
+    image: ctf_img
+    container_name: ctf_box
     env_file: .env
     volumes:
       - ${OUTER_FILE}:/root/file:ro
       - ${OUTER_WORK}:/root/work
+    ports:
+      - "8888:23946"
     stdin_open: true
     tty: true

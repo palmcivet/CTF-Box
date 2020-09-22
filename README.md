@@ -1,15 +1,15 @@
-# Light Security
+# CTF Box
 
-This is a Docker for CTF based on ubuntu:20.04
+This is a Docker environment for CTF based on ubuntu 20.04
 
 ## Usage
 
 ```bash
-$ git clone --depth=1 https://github.com/Palmcivet/light-security
-$ cd ./light-security
+$ git clone --depth=1 https://github.com/Palmcivet/CTF-Box
+$ cd ./CTF-Box
 $ vi .env
 $ docker-compose up -d
-$ docker exec -it sec_app /bin/zsh
+$ docker exec -it ctf_app /bin/zsh
 ```
 
 You should edit `.env` so that you can use your file in the container. By default, the compose will pass `./` to those variables:
@@ -20,7 +20,7 @@ You should edit `.env` so that you can use your file in the container. By defaul
 You can launch a instant docker with command:
 
 ```bash
-$ docker run -it --rm --name temp_app -v /other_dir:/other:rw light_sec /bin/zsh
+$ docker run -it --rm --name temp_app -v /other_dir:/other:rw ctf_img /bin/zsh
 ```
 
 Use `--rm` so it will be cleaned after exit.
@@ -31,7 +31,7 @@ Use `--rm` so it will be cleaned after exit.
 
 By default, you will enter `~`, with following directory:
 
-- SEC
+- HACK
     - debug: debuggers that support remote debugging
     - toos: executable files
 - files
@@ -42,8 +42,8 @@ By default, you will enter `~`, with following directory:
 In order to quick launch the docker, you can add this to shell profile(suck as `~/.bashrc`):
 
 ```bash
-SEC_FILE="~/light-security/docker-compose.yml"
-sec_temp() {
+SEC_FILE="~/CTF-Box/docker-compose.yml"
+ctf_temp() {
     local CWD=$(cd $1; dirname $(pwd))
     if [ $# -eq 2 ]; then
       local VOL="-v $2"
@@ -54,16 +54,17 @@ sec_temp() {
       --name temp_app \
       -v $CWD:/root/work \
       $VOL \
-      light_sec \
+      ctf_img \
       /bin/zsh
 }
-alias sec_enter="docker-compose -f $SEC_FILE exec sec_app /bin/zsh"
-alias sec_break="docker-compose -f $SEC_FILE stop sec_app"
-alias sec_start="docker-compose -f $SEC_FILE start sec_app && sec_enter"
+alias ctf_enter="docker-compose -f $SEC_FILE exec ctf_app /bin/zsh"
+alias ctf_break="docker-compose -f $SEC_FILE stop ctf_app"
+alias ctf_start="docker-compose -f $SEC_FILE start ctf_app && ctf_enter"
 ```
 
 ## Tools
 ### Essential
+
 - python3-pip
 - python3-dev
 - curl
@@ -72,21 +73,34 @@ alias sec_start="docker-compose -f $SEC_FILE start sec_app && sec_enter"
 - zsh
 - oh-my-zsh
 
-### CTF
+### Misc
+
 - binwalk
 - pcapfix
 - foremost
 - steghide
 - pngcheck
 - outguess
+- imagemagick
 - multimon-ng
-- ncat
-- ltrace
+
+### Binary
+
 - gcc
 - gdb
+- ncat
+- ltrace
 - gdb-multiarch
 - peda
+- pwndbg
 - radare2
+
+### Python Lib
+
+- gmpy2
 - pwntools
-- z3-solver
-- gmpy
+- z3-solver(angr)
+- ROPGadget(pwndbg)
+- unicorn(pwndbg/gef)
+- capstone(pwndbg/gef)
+- keystone-engine(gef)

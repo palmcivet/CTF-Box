@@ -1,23 +1,29 @@
-# !/usr/bin/bash
+# !/bin/bash
 
-# support i386
-dpkg --add-architecture i386
-
-# package manager
-cp config/sources.list /etc/apt/sources.list \
-    && apt-get update \
-    && apt-get -y upgrade
-
-# essential tools
+# tools from package repository
 apt-get install -y --no-install-recommends \
-    sudo \
     apt-utils \
     python3-pip \
     python3-dev \
+    sudo \
     curl \
     zsh \
     git \
-    vim
+    vim \
+    binwalk \
+    pcapfix \
+    foremost \
+    steghide \
+    pngcheck \
+    outguess \
+    imagemagick \
+    multimon-ng \
+    python3-gmpy2 \
+    gcc \
+    gdb \
+    ncat \
+    ltrace \
+    gdb-multiarch
 
 # pip
 python3 -m pip install --upgrade pip
@@ -28,28 +34,39 @@ cp ./config/pip.conf ~/.pip/pip.conf
 chmod 755 ./oh-my-zsh.sh \
     && ./oh-my-zsh.sh
 rm ~/.oh-my-zsh/themes/*
-cp ./config/robbyrussell.zsh-theme ~/.oh-my-zsh/themes/robbyrussell.zsh-theme
+cp ./config/gnzh.zsh-theme ~/.oh-my-zsh/themes/gnzh.zsh-theme
 cp ./config/zshrc ~/.zshrc
 chsh -s /bin/zsh root
 touch ~/.z
 
-# fix timezone
-ln -fs /usr/share/zoneinfo/Asiz/Shanghai /etc/localtime
+# toolbox
+ROOT=HACK
+EXEC=~/${ROOT}/exec
+DEBUG=~/${ROOT}/debug
+
+# debugger
+mkdir -p ${EXEC} ${DEBUG}
+cp -rf ./debug ${DEBUG}
+
+echo "export PATH=${EXEC}:${PATH}" >> ~/.zshrc
+echo "export TOOL=${ROOT}/tool" >> ~/.zshrc
+
+# eg. link_exec clear.sh clear
+link_exec() {
+    cp ./scripts/${1} ${EXEC}/${1}
+    chmod 755 ${EXEC}/${1}
+    echo "alias ${2}=\"${EXEC}/${1}\"" >> ~/.zshrc
+}
 
 # link scripts to command
-cp ./scripts/clear.sh /usr/local/bin/clear
-cp ./scripts/saferm.sh /usr/local/bin/saferm
-chmod 755 /usr/local/bin/clear
-chmod 755 /usr/local/bin/saferm
-echo 'alias clear="/usr/local/bin/clear"' >> ~/.zshrc
-echo 'alias rm="/usr/local/bin/saferm"' >> ~/.zshrc
+link_exec clear.sh clear
+link_exec saferm.sh rm
+link_exec trid trid
+cp ./custom.sh ~/${ROOT}/custom.sh
+chmod 755 ~/${ROOT}/custom.sh
 
-# security tools
-chmod 755 ./security.sh \
-    && ./security.sh
-
-echo "cd ~" >> ~/.zshrc
-echo 'echo "Hack Fun!"' >> ~/.zshrc
+# fix timezone
+ln -fs /usr/share/zoneinfo/Asiz/Shanghai /etc/localtime
 
 # clean cache
 apt-get autoclean \
@@ -61,3 +78,16 @@ find /var/log/ -name "*.log" | xargs rm -f
 rm -r /var/lib/apt/lists/*
 rm -r /var/log/apt
 rm -r ~/.cache
+
+# welcome
+echo '' >> ~/.zshrc
+echo 'echo -e " ::\   ::\                     ::\          ::::::::\                  ::\  "' >> ~/.zshrc
+echo 'echo -e " :: |  :: |                    :: |         ::  _____|                 :: | "' >> ~/.zshrc
+echo 'echo -e " :: |  :: | ::::::\   :::::::\ :: |  ::\    :: |   ::\   ::\ :::::::\  :: | "' >> ~/.zshrc
+echo 'echo -e " :::::::: | \____::\ ::  _____|:: | ::  |   :::::\ :: |  :: |::  __::\ :: | "' >> ~/.zshrc
+echo 'echo -e " ::  __:: | ::::::: |:: /      ::::::  /    ::  __|:: |  :: |:: |  :: |\__| "' >> ~/.zshrc
+echo 'echo -e " :: |  :: |::  __:: |:: |      ::  _::<     :: |   :: |  :: |:: |  :: |     "' >> ~/.zshrc
+echo 'echo -e " :: |  :: |\::::::: |\:::::::\ :: | \::\    :: |   \::::::  |:: |  :: |::\  "' >> ~/.zshrc
+echo 'echo -e " \__|  \__| \_______| \_______|\__|  \__|   \__|    \______/ \__|  \__|\__| "' >> ~/.zshrc
+echo '' >> ~/.zshrc
+echo 'cd ~' >> ~/.zshrc
