@@ -10,6 +10,7 @@ $ cd ./CTF-Box
 $ vi .env
 $ docker-compose up -d
 $ docker exec -it ctf_app /bin/zsh
+$ ./HACK/custom.sh
 ```
 
 You should edit `.env` so that you can use your file in the container. By default, the compose will pass `./` to those variables:
@@ -31,11 +32,11 @@ Use `--rm` so it will be cleaned after exit.
 
 By default, you will enter `~`, with following directory:
 
-- HACK
+- `HACK`
     - debug: debuggers that support remote debugging
     - toos: executable files
-- files
-- work
+- `files`
+- `work`
 
 ## Alias
 
@@ -75,6 +76,7 @@ alias ctf_start="docker-compose -f $SEC_FILE start ctf_app && ctf_enter"
 
 ### Misc
 
+- yafu
 - binwalk
 - pcapfix
 - foremost

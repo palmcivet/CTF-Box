@@ -10,6 +10,9 @@ services:
       - ${OUTER_FILE}:/root/file:ro
       - ${OUTER_WORK}:/root/work
     ports:
-      - "8888:23946"
+      - ${PORT_32}:${PORT_32}
+      - ${PORT_64}:${PORT_64}
+      - 80:${PORT_80}
+      - ${PORT_O}:${PORT_O}
     stdin_open: true
     tty: true

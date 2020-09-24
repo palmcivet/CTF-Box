@@ -10,7 +10,7 @@ RUN cd /install \
     && cp config/sources.list /etc/apt/sources.list \
     && apt-get update \
     && apt-get -y upgrade \
-    && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata apt-utils \
     && chmod 755 install.sh \
     && ./install.sh \
     && rm -rf /install

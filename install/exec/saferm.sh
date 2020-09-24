@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 RMCMD=/bin/rm
 MVCMD=/bin/mv

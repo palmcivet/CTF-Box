@@ -2,7 +2,6 @@
 
 # tools from package repository
 apt-get install -y --no-install-recommends \
-    apt-utils \
     python3-pip \
     python3-dev \
     sudo \
@@ -23,15 +22,24 @@ apt-get install -y --no-install-recommends \
     gdb \
     ncat \
     ltrace \
-    gdb-multiarch
+    gdbserver \
+    gdb-multiarch \
+    libstdc++6:i386
 
 # pip
-python3 -m pip install --upgrade pip
+python3 -m pip install --upgrade \
+    pip \
+    numpy \
+    Pillow \
+    opencv-python
 mkdir ~/.pip
 cp ./config/pip.conf ~/.pip/pip.conf
 
+# fix timezone
+ln -fs /usr/share/zoneinfo/Asiz/Shanghai /etc/localtime
+
 # configure oh-my-zsh theme
-chmod 755 ./oh-my-zsh.sh \
+chmod +x ./oh-my-zsh.sh \
     && ./oh-my-zsh.sh
 rm ~/.oh-my-zsh/themes/*
 cp ./config/gnzh.zsh-theme ~/.oh-my-zsh/themes/gnzh.zsh-theme
@@ -41,43 +49,29 @@ touch ~/.z
 
 # toolbox
 ROOT=HACK
+WORK=~/work
+FILE=~/file
 EXEC=~/${ROOT}/exec
-DEBUG=~/${ROOT}/debug
 
-# debugger
-mkdir -p ${EXEC} ${DEBUG}
-cp -rf ./debug ${DEBUG}
+mkdir -p ${WORK} ${FILE} ${EXEC}
 
-echo "export PATH=${EXEC}:${PATH}" >> ~/.zshrc
-echo "export TOOL=${ROOT}/tool" >> ~/.zshrc
+echo "export PATH=${FILE}:${EXEC}:${PATH}" >> ~/.zshrc
+echo "export TOOL=~/${ROOT}/tool" >> ~/.zshrc
+echo "export python3=`which python3`" >> ~/.zshrc
 
-# eg. link_exec clear.sh clear
-link_exec() {
-    cp ./scripts/${1} ${EXEC}/${1}
-    chmod 755 ${EXEC}/${1}
-    echo "alias ${2}=\"${EXEC}/${1}\"" >> ~/.zshrc
-}
+# link rm command
+cp -Rf ./exec/* ${EXEC}
+chmod +x ${EXEC}/*
+echo "alias rm=\"${EXEC}/saferm.sh\"" >> ~/.zshrc
 
-# link scripts to command
-link_exec clear.sh clear
-link_exec saferm.sh rm
-link_exec trid trid
 cp ./custom.sh ~/${ROOT}/custom.sh
-chmod 755 ~/${ROOT}/custom.sh
-
-# fix timezone
-ln -fs /usr/share/zoneinfo/Asiz/Shanghai /etc/localtime
+chmod +x ~/${ROOT}/custom.sh
 
 # clean cache
-apt-get autoclean \
-    && apt-get autoremove \
-    && sync
-echo "" > /var/log/messages
-echo "" > /var/log/syslog
-find /var/log/ -name "*.log" | xargs rm -f
-rm -r /var/lib/apt/lists/*
-rm -r /var/log/apt
-rm -r ~/.cache
+bash ${EXEC}/clear.sh
+
+# schedule tasks
+echo "debugger.sh" >> ~/.zshrc
 
 # welcome
 echo '' >> ~/.zshrc
@@ -90,4 +84,4 @@ echo 'echo -e " :: |  :: |::  __:: |:: |      ::  _::<     :: |   :: |  :: |:: |
 echo 'echo -e " :: |  :: |\::::::: |\:::::::\ :: | \::\    :: |   \::::::  |:: |  :: |::\  "' >> ~/.zshrc
 echo 'echo -e " \__|  \__| \_______| \_______|\__|  \__|   \__|    \______/ \__|  \__|\__| "' >> ~/.zshrc
 echo '' >> ~/.zshrc
-echo 'cd ~' >> ~/.zshrc
+echo "cd ${WORK}" >> ~/.zshrc
