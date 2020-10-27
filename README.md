@@ -1,66 +1,105 @@
+[toc]
+
 # CTF Box
 
-This is a Docker environment for CTF based on ubuntu 20.04
+This is a Docker environment for CTF and vulnerability research based on ubuntu 20.04.
 
-## Usage
+## Installation
+### 0. Download CTF-Box
 
 ```bash
-$ git clone --depth=1 https://github.com/Palmcivet/CTF-Box
+$ export CTF_BOX=~/.config/CTF-Box
+$ git clone --depth=1 https://github.com/Palmcivet/CTF-Box.git $CTF_BOX
 $ cd ./CTF-Box
-$ vi .env
-$ docker-compose up -d
-$ docker exec -it ctf_app /bin/zsh
-$ ./HACK/custom.sh
 ```
 
-You should edit `.env` so that you can use your file in the container. By default, the compose will pass `./` to those variables:
+`$CTF_BOX` is a folder, you can name it any way you want.
 
-- `OUTER_FILE`: files that use as tool
-- `OUTER_WORK`: your work directory
+> **NOTICE**: Of course, you don't have to create `$CTF_BOX`， but we strongly recommend setting up a folder in which to store this project and your configurations. This makes it easier to start container with [alias](#alias "refer to").
 
-You can launch a instant docker with command:
+### 1. Edit `.env`
+
+Before launch, you should edit `.env` so that you can access your own files in the container.
+
+```bash
+$ vi .env
+```
+
+By default, the compose will pass `./` to those variables:
+
+- `OUTER_FILE`: files that used like a tool, this directory is added into `$PATH`
+- `OUTER_WORK`: your work directory, can be read and write frequently and temporarily
+
+### 2. Build and run
+
+```bash
+$ docker-compose up -d
+```
+
+When execuate `docker-compose up`, the image will be built automatically. Please wait and take a rest.
+
+### 3. Customize and hack fun
+
+```bash
+$ docker-compose exec ctf_box_app
+
+╭─root@0ce6dc01b282 ~/work
+╰─➤ ./HACK/custom.sh
+```
+
+> **NOTICE**: Using `docker-compose exec` rather than `docker exec`, so the `ctf_box_app` is the name of CTF-Box service.
+
+The script `custom.sh` aiamed at installing some binaries analysis tools, which need a good network connection.
+
+## Instant container
+
+You can launch an instant container:
 
 ```bash
 $ docker run -it --rm --name temp_app -v /other_dir:/other:rw ctf_img /bin/zsh
 ```
 
-Use `--rm` so it will be cleaned after exit.
+Using `--rm` so it will be cleaned after exit.
 
-> NOTICE: the arguments specified by `-v` should be absolute path.
+> **NOTICE**: The arguments specified by `-v` should be absolute path.
 
 ## Environment
 
-By default, you will enter `~`, with following directory:
-
 - `HACK`
-    - debug: debuggers that support remote debugging
-    - toos: executable files
-- `files`
-- `work`
+    - `exec`: debuggers and executable files, copied during building
+    - `tool`: installed by `custom.sh`
+- `file`: mapped from `$OUTER_FILE`
+- `work`: mapped from `$OUTER_WORK`
+
+When you enter the CTF-Box, the pwd is `~/work` by default. This is actually your working directory.
 
 ## Alias
 
-In order to quick launch the docker, you can add this to shell profile(suck as `~/.bashrc`):
+In order to launch the container quickly, you can add this to shell profile(such as `~/.bashrc`, `~/.zshrc`):
 
 ```bash
-SEC_FILE="~/CTF-Box/docker-compose.yml"
+CTF_BOX=~/.config/CTF-Box
+SEC_FILE="${CTF_BOX}/docker-compose.yml"
+
 ctf_temp() {
     local CWD=$(cd $1; dirname $(pwd))
     if [ $# -eq 2 ]; then
-      local VOL="-v $2"
+        local VOL="-v $2"
     fi
     docker run \
-      -it \
-      --rm \
-      --name temp_app \
-      -v $CWD:/root/work \
-      $VOL \
-      ctf_img \
-      /bin/zsh
+        -it \
+        --rm \
+        --name temp_app \
+        -e LANG=C.UTF-8 \
+        -v $CWD:/root/work \
+        $VOL \
+        ctf_img \
+        /bin/zsh
 }
-alias ctf_enter="docker-compose -f $SEC_FILE exec ctf_app /bin/zsh"
-alias ctf_break="docker-compose -f $SEC_FILE stop ctf_app"
-alias ctf_start="docker-compose -f $SEC_FILE start ctf_app && ctf_enter"
+# ctf_temp ./mywork ~/myapp:work
+alias ctf_enter="docker-compose -f $SEC_FILE exec ctf_box_app /bin/zsh"
+alias ctf_break="docker-compose -f $SEC_FILE stop ctf_box_app"
+alias ctf_start="docker-compose -f $SEC_FILE start ctf_box_app && ctf_enter"
 ```
 
 ## Tools
@@ -68,11 +107,15 @@ alias ctf_start="docker-compose -f $SEC_FILE start ctf_app && ctf_enter"
 
 - python3-pip
 - python3-dev
+- ruby
 - curl
+- wget
+- file
 - git
 - vim
 - zsh
 - oh-my-zsh
+- proxychains4
 
 ### Misc
 
@@ -106,3 +149,8 @@ alias ctf_start="docker-compose -f $SEC_FILE start ctf_app && ctf_enter"
 - unicorn(pwndbg/gef)
 - capstone(pwndbg/gef)
 - keystone-engine(gef)
+
+### Ruby
+
+- zsteg
+- one_gadget

@@ -1,7 +1,7 @@
 version: "3"
 
 services:
-  ctf_app:
+  ctf_box_app:
     build: ./
     image: ctf_img
     container_name: ctf_box
@@ -14,5 +14,6 @@ services:
       - ${PORT_64}:${PORT_64}
       - 80:${PORT_80}
       - ${PORT_O}:${PORT_O}
+    command: [/bin/zsh]
     stdin_open: true
     tty: true

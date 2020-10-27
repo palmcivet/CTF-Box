@@ -4,7 +4,11 @@
 apt-get install -y --no-install-recommends \
     python3-pip \
     python3-dev \
+    proxychains4 \
     sudo \
+    ruby \
+    file \
+    wget \
     curl \
     zsh \
     git \
@@ -15,6 +19,7 @@ apt-get install -y --no-install-recommends \
     steghide \
     pngcheck \
     outguess \
+    exiftool \
     imagemagick \
     multimon-ng \
     python3-gmpy2 \
@@ -40,23 +45,24 @@ ln -fs /usr/share/zoneinfo/Asiz/Shanghai /etc/localtime
 
 # configure oh-my-zsh theme
 chmod +x ./oh-my-zsh.sh \
-    && ./oh-my-zsh.sh
+    && bash ./oh-my-zsh.sh
 rm ~/.oh-my-zsh/themes/*
 cp ./config/gnzh.zsh-theme ~/.oh-my-zsh/themes/gnzh.zsh-theme
 cp ./config/zshrc ~/.zshrc
 chsh -s /bin/zsh root
 touch ~/.z
 
-# toolbox
+# define directories
 ROOT=HACK
 WORK=~/work
 FILE=~/file
 EXEC=~/${ROOT}/exec
+TOOL=~/${ROOT}/tool
 
-mkdir -p ${WORK} ${FILE} ${EXEC}
+mkdir -p ${WORK} ${FILE} ${EXEC} ${TOOL}
 
 echo "export PATH=${FILE}:${EXEC}:${PATH}" >> ~/.zshrc
-echo "export TOOL=~/${ROOT}/tool" >> ~/.zshrc
+echo "export TOOL=~/${TOOL}" >> ~/.zshrc
 echo "export python3=`which python3`" >> ~/.zshrc
 
 # link rm command
@@ -71,7 +77,7 @@ chmod +x ~/${ROOT}/custom.sh
 bash ${EXEC}/clear.sh
 
 # schedule tasks
-echo "debugger.sh" >> ~/.zshrc
+echo "bash debugger.sh" >> ~/.zshrc
 
 # welcome
 echo '' >> ~/.zshrc
