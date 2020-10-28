@@ -23,7 +23,7 @@ git clone --depth=1 https://github.com/radare/radare2.git ${TOOL}/radare2
 bash ${TOOL}/radare2/sys/install.sh
 
 # Python packages
-python3 -m pip install --upgrade \
+python3 -m pip install --upgrade --no-cache-dir \
     angr \
     git+https://github.com/Gallopsled/pwntools.git@dev
 

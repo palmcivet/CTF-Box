@@ -32,7 +32,7 @@ apt-get install -y --no-install-recommends \
     libstdc++6:i386
 
 # pip
-python3 -m pip install --upgrade \
+python3 -m pip install --upgrade --no-cache-dir \
     pip \
     numpy \
     Pillow \

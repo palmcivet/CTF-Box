@@ -7,12 +7,13 @@ echo "[+] Clearing logs..." \
     && echo "" > /var/log/messages \
     && echo "" > /var/log/syslog
 echo "[+] Clearing cache..." \
-    && rm -r /var/lib/apt/lists/* \
-    && rm -r /var/log/apt \
-    && rm -r ~/.cache \
-    && rm -r ~/.Trash \
-    && rm -r ~/.pip
+    && sudo rm -r /var/lib/apt/lists/* \
+    && sudo rm -r /var/log/apt \
+    && sudo rm -r ~/.cache \
+    && sudo rm -r ~/.Trash \
+    && sudo rm -r ~/.pip
 echo "[+] Clearing history..." \
-    && rm zsh_history \
-    && rm gdb_history
+    && sudo rm .zsh_history \
+    && sudo rm .gdb_history \
+    && sudo rm .python_history
 echo "[+] Clear completed!"

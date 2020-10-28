@@ -1,5 +1,3 @@
-[toc]
-
 # CTF Box
 
 This is a Docker environment for CTF and vulnerability research based on ubuntu 20.04.
@@ -49,14 +47,20 @@ $ docker-compose exec ctf_box_app
 
 > **NOTICE**: Using `docker-compose exec` rather than `docker exec`, so the `ctf_box_app` is the name of CTF-Box service.
 
-The script `custom.sh` aiamed at installing some binaries analysis tools, which need a good network connection.
+The script `custom.sh` aimed at installing some binaries analysis tools, which need a good network connection.
 
 ## Instant container
 
 You can launch an instant container:
 
 ```bash
-$ docker run -it --rm --name temp_app -v /other_dir:/other:rw ctf_img /bin/zsh
+$ docker run \
+	-it \
+	--rm \
+	--name temp_app \
+	-v /other_dir:/other:rw \
+	ctf_img \
+	/bin/zsh
 ```
 
 Using `--rm` so it will be cleaned after exit.
@@ -79,7 +83,6 @@ In order to launch the container quickly, you can add this to shell profile(such
 
 ```bash
 CTF_BOX=~/.config/CTF-Box
-SEC_FILE="${CTF_BOX}/docker-compose.yml"
 
 ctf_temp() {
     local CWD=$(cd $1; dirname $(pwd))
@@ -96,10 +99,11 @@ ctf_temp() {
         ctf_img \
         /bin/zsh
 }
-# ctf_temp ./mywork ~/myapp:work
-alias ctf_enter="docker-compose -f $SEC_FILE exec ctf_box_app /bin/zsh"
-alias ctf_break="docker-compose -f $SEC_FILE stop ctf_box_app"
-alias ctf_start="docker-compose -f $SEC_FILE start ctf_box_app && ctf_enter"
+# eg: ctf_temp ./mywork ~/myapp:work
+CTF_BOX_CMD="docker-compose -f $CTF_BOX/docker-compose.yml --env-file $CTF_BOX/.env"
+alias ctf_enter="$CTF_BOX_CMD exec ctf_box_app /bin/zsh"
+alias ctf_break="$CTF_BOX_CMD stop ctf_box_app"
+alias ctf_start="$CTF_BOX_CMD start ctf_box_app && ctf_enter"
 ```
 
 ## Tools
